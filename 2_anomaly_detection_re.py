@@ -1,3 +1,4 @@
+#%%
 import argparse
 import torch
 import pickle
@@ -15,9 +16,9 @@ from anomalyDetector import get_precision_recall
 parser = argparse.ArgumentParser(description='PyTorch RNN Anomaly Detection Model')
 parser.add_argument('--prediction_window_size', type=int, default=10,
                     help='prediction_window_size')
-parser.add_argument('--data', type=str, default='ecg',
+parser.add_argument('--data', type=str, default='nyc_taxi',
                     help='type of the dataset (ecg, gesture, power_demand, space_shuttle, respiration, nyc_taxi')
-parser.add_argument('--filename', type=str, default='chfdb_chf13_45590.pkl',
+parser.add_argument('--filename', type=str, default='nyc_taxi.csv',
                     help='filename of the dataset')
 parser.add_argument('--save_fig', action='store_true',
                     help='save results as figures')
@@ -26,23 +27,24 @@ parser.add_argument('--compensate', action='store_true',
 parser.add_argument('--beta', type=float, default=1.0,
                     help='beta value for f-beta score')
 
-
-args_ = parser.parse_args()
+#%%
+#args_ = parser.parse_args()
 print('-' * 89)
 print("=> loading checkpoint ")
-checkpoint = torch.load(str(Path('save',args_.data,'checkpoint',args_.filename).with_suffix('.pth')))
-args = checkpoint['args']
-args.prediction_window_size= args_.prediction_window_size
-args.beta = args_.beta
-args.save_fig = args_.save_fig
-args.compensate = args_.compensate
+# checkpoint = torch.load(str(Path('save',args_. = nyc_taxi,'checkpoint',args_.filename = 'nyc_taxi.csv').with_suffix('.pth')))
+# args = checkpoint['args']
+args.prediction_window_size= 10 # args_.prediction_window_size
+args.beta = 1  # args_.beta
+args.save_fig = 'store_true' #args_.save_fig
+args.compensate = 'store_true' #args_.compensate
 print("=> loaded checkpoint")
 
-
+#%%
 # Set the random seed manually for reproducibility.
 torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
 
+#%%
 ###############################################################################
 # Load data
 ###############################################################################
@@ -50,7 +52,7 @@ TimeseriesData = preprocess_data.PickleDataLoad(data_type=args.data,filename=arg
 train_dataset = TimeseriesData.batchify(args,TimeseriesData.trainData[:TimeseriesData.length], bsz=1)
 test_dataset = TimeseriesData.batchify(args,TimeseriesData.testData, bsz=1)
 
-
+#%%
 ###############################################################################
 # Build the model
 ###############################################################################
